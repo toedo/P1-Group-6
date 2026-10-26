@@ -1,0 +1,12 @@
+{
+	"extracts": [
+		{
+			"output": "tmp/aalborg.osm.pbf",
+			"output_format": "pbf",
+			"multipolygon": {
+				"file_name": "tmp/aalborg.geojson",
+				"file_type": "geojson"
+			}
+		}
+	]
+}
