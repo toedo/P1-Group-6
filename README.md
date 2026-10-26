@@ -14,9 +14,11 @@ The data used relies on OpenStreetMap (OSM) data and libraries used to import an
 - LibOsmium (https://github.com/osmcode/libosmium)
 - Osmium (https://github.com/osmcode/osmium-tool.git)
 
-To run this on windows we recommend using WSL.
+It is recommended to use Cond
 
 ### Installing
+It is recommended to use Conda-Forge to run this project when using Windows.
+
 To run this locally, copy the repo locally and first run the import-OSM bash script to import the map data.
 Then the algorithm can be run on the area defined by the import-OSM script by running (insert final finale name).c.
 Then to visualize this... (TBD)
