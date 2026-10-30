@@ -14,11 +14,13 @@ The data used relies on OpenStreetMap (OSM) data and libraries used to import an
 - LibOsmium (https://github.com/osmcode/libosmium)
 - Osmium (https://github.com/osmcode/osmium-tool.git)
 
-It is recommended to use Cond
+The dependencies for these libraries should be downloaded prior to running the data import script. The dependencies can be located using the above links.
 
 ### Installing
-It is recommended to use Conda-Forge to run this project when using Windows.
+It is recommended to use WSL if running this project on a Windows 10/11 system. It has been tested with Ubuntu 26.04 LTS.
 
-To run this locally, copy the repo locally and first run the import-OSM bash script to import the map data.
+To run this locally, copy the repo locally.
+Then install the required dependencies.
+Run the import-OSM bash script to import the map data.
 Then the algorithm can be run on the area defined by the import-OSM script by running (insert final finale name).c.
 Then to visualize this... (TBD)
