@@ -1,19 +1,7 @@
-#!/bin/bash
 OSMIUM=./osmium-tool/build/osmium
 DK_FULL_PBF=./tmp/denmark-latest.osm.pbf
 AALBORG_GEOJSON=./tmp/aalborg.geojson
 cd "$(dirname "$0")"
-
-echo "Downloading necessary packages"
-git clone https://github.com/mapbox/protozero
-git clone https://github.com/osmcode/libosmium
-git clone https://github.com/osmcode/osmium-tool.git
-echo "Building osmium-tool"
-mkdir osmium-tool/build
-cd osmium-tool/build
-cmake ..
-make
-cd ../..
 
 mkdir tmp
 if test -e "$DK_FULL_PBF"; then
