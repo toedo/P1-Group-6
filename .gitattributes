@@ -4,3 +4,4 @@
 # .sh files should use to lf end-of-line(eol) attribute to run correctly
 # otherwise this will cause issues when running in a linux environment
 *.sh text eol=lf
+*.json text eol=lf
