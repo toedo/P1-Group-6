@@ -12,3 +12,21 @@ cmake ..
 make
 cd ../..
 
+echo "Building Protozero"
+mkdir protozero/build
+cd protozero/build
+cmake ..
+make
+cd ../..
+
+echo "Building Libosmium"
+mkdir libosmium/build
+cd libosmium/build
+cmake ..
+make
+cd ../..
+
+echo "Making files executable and Creating symlinks to usr/bin"
+# sudo ln -s ./osmium-tool/build/osmium /usr/bin
+
+
