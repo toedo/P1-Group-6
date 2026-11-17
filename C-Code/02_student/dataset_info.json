@@ -1,0 +1,31 @@
+{
+  "created": "2026-11-16T13:23:35",
+  "sources": {
+    "roads": "OpenStreetMap contributors (ODbL), downloaded 2026-11-16T12:15:56+00:00",
+    "winter_priorities": "Aalborg Kommune, vintertjeneste (KortInfo), downloaded 2026-11-16T12:17:13+00:00"
+  },
+  "n_nodes": 14647,
+  "n_arcs": 32346,
+  "n_arcs_by_priority": {
+    "0": 12600,
+    "1": 2623,
+    "2": 6359,
+    "3": 1978,
+    "4": 8786
+  },
+  "street_km_by_priority": {
+    "0": 988.8,
+    "1": 347.9,
+    "2": 831.2,
+    "3": 131.7,
+    "4": 712.0
+  },
+  "arc_km_by_priority": {
+    "0": 1759.5,
+    "1": 544.4,
+    "2": 1579.7,
+    "3": 253.4,
+    "4": 1382.9
+  },
+  "n_routes": 74
+}
