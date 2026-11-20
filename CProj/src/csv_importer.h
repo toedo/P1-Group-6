@@ -1,6 +1,8 @@
 #ifndef CSV_IMPORTER_H
 #define CSV_IMPORTER_H
 #include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 
 typedef struct node Node;
 typedef struct edge Edge;
@@ -8,8 +10,15 @@ typedef struct edge Edge;
 //A Single Node
 typedef struct node {
     int nodeID;
+    //Position data in lon/lat
     double longitude;
     double latitude;
+    //UTM Zone 32 - meter data. Is good for calculating the distance in meters between two arbitrary nodes
+    //Can be used for heuristics or distance estimation.
+    double UTMx_m;
+    double UTMy_m;
+    //OSM Data
+    int OSMNodeID;
     //Array info
     int amountOfConnectedEdges;
     Edge* connectedEdges;
@@ -17,17 +26,32 @@ typedef struct node {
 
 //A Single Edge
 typedef struct edge {
-    Node* fromNode;
-    Node* toNode;
+    //The actual graph / path data
     int edgeID;
-    //No reverse edge means it is oneway
+    int fromNodeID;
+    Node* fromNode;
+    int toNodeID;
+    Node* toNode;
+
+    //This is mostly used to calculate the "cost" of traversing an edge
+    double lengthM;
+    double speedKMH;
+    double travelTimeS;
+    //Road data, mostly for display
+    int serviceClassPriority;
+    int routeNumber;
+    char* roadName;
+    char* roadType;
+    //No reverse edge means it is oneway, this is also relevant for path finding
+    bool isOneway;
     int reverseEdgeID;
     Edge* reverseEdge;
-    double lengthM;
-    //Heuristics
-    int serviceClass;
-    //Traffic, Hospital proximity, Bus Route*,
 
+    //These two *probably* aren't necessary
+    char* linestringGeometry;
+    //This is on the form "(int)_(int)" where the two ints are two OSM node ids.
+    char* OSMEdgeID;
+    
 } Edge;
 
 //Ordered arrays for the taken path
