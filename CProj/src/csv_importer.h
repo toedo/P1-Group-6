@@ -51,7 +51,7 @@ typedef struct edge {
     char* linestringGeometry;
     //This is on the form "(int)_(int)" where the two ints are two OSM node ids.
     char* OSMEdgeID;
-    
+
 } Edge;
 
 //Ordered arrays for the taken path
@@ -66,11 +66,11 @@ typedef struct path {
 //Helper function to load a single node
 Node LoadNodeFromCSV(FILE* nodesFile);
 //Load all nodes from file
-void LoadNodesFromCSV(FILE* nodesCSV, Node* nodes);
+Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size);
 //Helper function to load a single edge
 Edge LoadEdgeFromCSV(FILE* edgesFile);
 //Load all edges from file
-void LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges);
+Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size);
 
 //Dijkstras algorithm, finds shortest path between two points
 //Could be replaced with A*

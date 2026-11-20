@@ -1,1 +1,4 @@
 add_library(csv_importer csv_importer.c)
+
+add_executable(import_aalborg_data import_aalborg_data.c)
+target_link_libraries(import_aalborg_data csv_importer)
