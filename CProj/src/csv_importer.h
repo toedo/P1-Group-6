@@ -70,6 +70,9 @@ typedef struct path {
 Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size);
 //Load all edges from file
 Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size);
+//returns 0 for successful linking of node and edge pointers
+int LinkNodesAndEdges(Edge* edges, int edgeCount, Node* nods, int nodeCount);
+
 
 //Dijkstras algorithm, finds shortest path between two points
 //Could be replaced with A*

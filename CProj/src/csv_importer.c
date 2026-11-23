@@ -37,6 +37,7 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
     fscanf(edgesCSV,"[^\n]\n", NULL);
     Edge edge;
     char boolBuffer[6];
+    //calloc string pointers 
     int i = 0;
     //edge_id,u,v,length_m,speed_kmh,travel_time_s,priority,route,name,road_type,oneway,reverse_edge_id,geometry,osm_edge_id
     while (14 == fscanf(edgesCSV,"%d,%d,%d,%lf,%d,%lf,%d,%d,%s,%s,%s,%d,\"%s\",%s",
