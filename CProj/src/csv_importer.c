@@ -1,13 +1,13 @@
 #include "csv_importer.h"
 
-#include <stdlib.h>
+
 
 Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size) {
     //skip first line
     fscanf(nodesCSV,"[^\n]\n", NULL);
     int i = 0;
     Node node;
-
+    //node_id,lon,lat,x_m,y_m,osm_node_id
     while (6 == fscanf(nodesCSV, "%d,%lf,%lf,%lf,%lf,%d", &node.nodeID, &node.longitude, &node.latitude, &node.UTMx_m, &node.UTMy_m, &node.OSMNodeID)) {
         if (i<size) {
             //while not exceeding the size of Node* nodes, overwrite
@@ -27,9 +27,19 @@ Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size) {
         }
         i++;
     }
-
-
-
-
     //return array pointer
+    return nodes;
+}
+
+Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
+    //skip the first line
+    fscanf(edgesCSV,"[^\n]\n", NULL);
+    Edge edge;
+    char boolBuffer[6];
+    int i = 0;
+    //edge_id,u,v,length_m,speed_kmh,travel_time_s,priority,route,name,road_type,oneway,reverse_edge_id,geometry,osm_edge_id
+    fscanf(edgesCSV,"%d,%d,%d,%lf,%d,%lf,%d,%d,%s,%s,%s,%d,\"%s\",%s",
+        &edge.edgeID, &edge.fromNodeID, &edge.toNodeID,&edge.lengthM,&edge.speedKMH,
+        &edge.travelTimeS,&edge.serviceClassPriority,&edge.routeNumber,&edge.roadName,
+        &edge.roadType,&boolBuffer,&edge.reverseEdgeID, &edge.linestringGeometry, &edge.OSMEdgeID);
 }

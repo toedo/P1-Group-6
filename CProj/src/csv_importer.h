@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 typedef struct node Node;
 typedef struct edge Edge;
@@ -40,7 +41,9 @@ typedef struct edge {
     //Road data, mostly for display
     int serviceClassPriority;
     int routeNumber;
+    //pointer to string
     char* roadName;
+    //pointer to string
     char* roadType;
     //No reverse edge means it is oneway, this is also relevant for path finding
     bool isOneway;
@@ -65,8 +68,6 @@ typedef struct path {
 
 //Load all nodes from file
 Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size);
-//Helper function to load a single edge
-Edge LoadEdgeFromCSV(FILE* edgesFile);
 //Load all edges from file
 Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size);
 
