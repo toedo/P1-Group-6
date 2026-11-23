@@ -1,4 +1,5 @@
 #include "csv_importer.h"
+#define MAX_STR_BUFFER 256
 
 //Loads nodes from CSV document
 //Should be ran before LoadEdgesFromCSV()
@@ -35,21 +36,39 @@ Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size) {
 Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
     //skip the first line
     fscanf(edgesCSV,"[^\n]\n", NULL);
+    //edge struct for holding and formatting data while its being imported
     Edge edge;
-    char boolBuffer[6];
-    //calloc string pointers 
+
+    //Buffers for string values
+    char roadNameBuffer[MAX_STR_BUFFER];
+    char roadTypeBuffer[MAX_STR_BUFFER];
+    char isOnewayBuffer[6];
+    char LSGBuffer[MAX_STR_BUFFER];
+    char OSMEdgeIDBuffer[MAX_STR_BUFFER];
+
     int i = 0;
     //edge_id,u,v,length_m,speed_kmh,travel_time_s,priority,route,name,road_type,oneway,reverse_edge_id,geometry,osm_edge_id
     while (14 == fscanf(edgesCSV,"%d,%d,%d,%lf,%d,%lf,%d,%d,%s,%s,%s,%d,\"%s\",%s",
         &edge.edgeID, &edge.fromNodeID, &edge.toNodeID,&edge.lengthM,&edge.speedKMH,
-        &edge.travelTimeS,&edge.serviceClassPriority,&edge.routeNumber,&edge.roadName,
-        &edge.roadType,&boolBuffer,&edge.reverseEdgeID, &edge.linestringGeometry, &edge.OSMEdgeID)) {
+        &edge.travelTimeS,&edge.serviceClassPriority,&edge.routeNumber,&roadNameBuffer,&roadTypeBuffer,
+        &roadTypeBuffer,&isOnewayBuffer,&edge.reverseEdgeID, &LSGBuffer, &OSMEdgeIDBuffer)) {
+
         //Fill out edge data, like pointers to Nodes, and turning boolBuffer into a bool
-        if (strcmp(boolBuffer, "True") == 0) {
+        //TODO:Might be missing end of string (EOS) character. NumOfElements might also be 1 too low.
+        edge.roadName = calloc(strlen(roadNameBuffer), sizeof(char));
+        strcpy(edge.roadName, roadNameBuffer);
+        edge.roadType = calloc(strlen(roadTypeBuffer), sizeof(char));
+        strcpy(edge.roadType, roadTypeBuffer);
+        if (strcmp(isOnewayBuffer, "True") == 0) {
             edge.isOneway = true;
         } else {
             edge.isOneway = false;
         }
+        edge.linestringGeometry = calloc(strlen(edge.roadType), sizeof(char));
+        strcpy(edge.linestringGeometry, edge.roadType);
+        edge.OSMEdgeID = calloc(strlen(edge.roadName), sizeof(char));
+        strcpy(edge.OSMEdgeID, edge.roadName);
+
 
         if (i<size) {
             //While not exceeding the size of Edge* edges, overwrite
@@ -68,3 +87,9 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
         i++;
     }
 }
+
+int LinkNodesAndEdges(Edge* edges, int edgeCount, Node* nodes, int nodeCount) {
+    return 1;
+}
+
+//TODO: Add function that cleanly frees allocated memory
