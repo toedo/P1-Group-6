@@ -72,9 +72,9 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size);
 
 //Dijkstras algorithm, finds shortest path between two points
 //Could be replaced with A*
-Path Dijkstras(Node startNode, Node endNode);
+Path Dijkstras(Node* startNode, Node* endNode);
 //The A* algorithm
-Path AStar(Node startNode, Node endNode);
+Path AStar(Node* startNode, Node* endNode);
 
 //Implementation of the chinese postman problem
 Path ChinesePostman(Node* startNode, Node* nodes, Edge* edges);
