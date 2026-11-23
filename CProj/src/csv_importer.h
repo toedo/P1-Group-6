@@ -63,8 +63,6 @@ typedef struct path {
     Node* nodes;
 } Path;
 
-//Helper function to load a single node
-Node LoadNodeFromCSV(FILE* nodesFile);
 //Load all nodes from file
 Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size);
 //Helper function to load a single edge
