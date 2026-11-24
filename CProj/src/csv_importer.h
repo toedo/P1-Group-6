@@ -7,6 +7,8 @@
 
 typedef struct node Node;
 typedef struct edge Edge;
+typedef struct graph Graph;
+typedef struct path Path;
 
 //A Single Node, must be allocated with calloc
 typedef struct node {
@@ -57,6 +59,16 @@ typedef struct edge {
 
 } Edge;
 
+//TODO: Finish graph struct
+typedef struct graph {
+    Node* head;
+    //References to nodes and edges arrays?
+    int edgeCount;
+    Edge* edges;
+    int nodeCount;
+    Node* nodes;
+}Graph;
+
 //Ordered arrays for the taken path
 typedef struct path {
     int edgesTraversed;
@@ -66,12 +78,15 @@ typedef struct path {
     Node* nodes;
 } Path;
 
-//Load all nodes from file
+//Loads nodes from CSV document
+//Should be ran before LoadEdgesFromCSV()
 Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size);
-//Load all edges from file
+//Loads edges into an array from a CSV document
+//Do not run before LoadNodesFromCSV()
 Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size);
 //returns 0 for successful linking of node and edge pointers
 int LinkNodesAndEdges(Edge* edges, int edgeCount, Node* nodes, int nodeCount);
+//callocs or reallocs node.outgoingEdges array, returns 0 on success
 int AppendOutgoingEdgeToNode(Edge* edge, Node* node);
 
 

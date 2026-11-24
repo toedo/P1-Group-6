@@ -1,8 +1,7 @@
 #include "csv_importer.h"
 #define MAX_STR_BUFFER 256
 
-//Loads nodes from CSV document
-//Should be ran before LoadEdgesFromCSV()
+
 Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size) {
     //skip first line
     fscanf(nodesCSV,"[^\n]\n", NULL);
@@ -31,8 +30,7 @@ Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size) {
     //return array pointer
     return nodes;
 }
-//Loads edges into an array from a CSV document
-//Do not run before LoadNodesFromCSV()
+
 Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
     //skip the first line
     fscanf(edgesCSV,"[^\n]\n", NULL);
@@ -86,7 +84,8 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
         i++;
     }
 }
-
+//TODO: Implement solution for when graph is reduced from original data set
+//TODO: Reverse edge pointers
 int LinkNodesAndEdges(Edge* edges, int edgeCount, Node* nodes, int nodeCount) {
     //loop over edges array
     for (int i = 0; i < edgeCount; i++) {
@@ -96,21 +95,38 @@ int LinkNodesAndEdges(Edge* edges, int edgeCount, Node* nodes, int nodeCount) {
             //The fromNodeID is equivalent to the array index of that node in Node* nodes
             edges[i].fromNode = &nodes[edges[i].fromNodeID];
             //put edge pointer in from-nodes's Edge* outgoingEdges array.
-            //TODO: Add exiting edge to node.outgoingEdges
+            if (AppendOutgoingEdgeToNode(&edges[i],&nodes[edges[i].fromNodeID])==0) {
+                //printf for logging here?
+            }
         }
         //find end-node pointer by CSV ID, put node pointer in Node* toNode
         if (edges[i].toNodeID >= 0 && edges[i].toNodeID < nodeCount) {
             edges[i].toNode = &nodes[edges[i].toNodeID];
         }
-
     }
 
     return 0;
 }
-int AppendOutgoingEdgeToNode(Edge* edge, Node* node) {
-    node->amountOfOutgoingEdges++;
-    //TODO: Write the code
 
+int AppendOutgoingEdgeToNode(Edge* edge, Node* node) {
+    //should be 0 by default
+    node->amountOfOutgoingEdges++;
+    if (node->outgoingEdges == NULL) {
+        node->outgoingEdges = calloc(node->amountOfOutgoingEdges, sizeof(Edge));
+        if (node->outgoingEdges == NULL) {
+            printf("Memory allocation failed");
+            exit(EXIT_FAILURE);
+        }
+        node->outgoingEdges[node->amountOfOutgoingEdges-1] = *edge;
+    } else {
+        node->outgoingEdges = realloc(node->outgoingEdges,sizeof(Edge)*node->amountOfOutgoingEdges);
+        if (node->outgoingEdges == NULL) {
+            printf("Memory allocation failed");
+            exit(EXIT_FAILURE);
+        }
+        node->outgoingEdges[node->amountOfOutgoingEdges-1] = *edge;
+    }
+    return 0;
 }
 
-//TODO: Add function that cleanly frees allocated memory
+//TODO: Add function that cleanly frees all allocated memory
