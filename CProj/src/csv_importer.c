@@ -85,8 +85,7 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
     }
 }
 //TODO: Implement solution for when graph is reduced from original data set
-//TODO: Reverse edge pointers
-int LinkNodesAndEdges(Edge* edges, int edgeCount, Node* nodes, int nodeCount) {
+int LinkNodesAndEdgesByCSVID(Edge* edges, int edgeCount, Node* nodes, int nodeCount) {
     //loop over edges array
     for (int i = 0; i < edgeCount; i++) {
         //find start-node pointer by CSV ID, put node pointer in Node* fromNode
@@ -103,10 +102,15 @@ int LinkNodesAndEdges(Edge* edges, int edgeCount, Node* nodes, int nodeCount) {
         if (edges[i].toNodeID >= 0 && edges[i].toNodeID < nodeCount) {
             edges[i].toNode = &nodes[edges[i].toNodeID];
         }
+        //reverse edge pointers
+        if (edges[i].isOneway == false) {
+            edges[i].reverseEdge = &edges[edges[i].reverseEdgeID];
+        }
     }
 
     return 0;
 }
+//TODO: Maybe add function that links using OSM IDs
 
 int AppendOutgoingEdgeToNode(Edge* edge, Node* node) {
     //should be 0 by default

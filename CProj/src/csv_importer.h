@@ -85,7 +85,7 @@ Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size);
 //Do not run before LoadNodesFromCSV()
 Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size);
 //returns 0 for successful linking of node and edge pointers
-int LinkNodesAndEdges(Edge* edges, int edgeCount, Node* nodes, int nodeCount);
+int LinkNodesAndEdgesByCSVID(Edge* edges, int edgeCount, Node* nodes, int nodeCount);
 //callocs or reallocs node.outgoingEdges array, returns 0 on success
 int AppendOutgoingEdgeToNode(Edge* edge, Node* node);
 
