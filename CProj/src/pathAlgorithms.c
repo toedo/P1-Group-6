@@ -1,4 +1,4 @@
-#include "dijkstras.h"
+#include "pathAlgorithms.h"
 
 const int INF = 1000000;
 
@@ -24,7 +24,7 @@ Path Dijkstras(Node* startNode, Node* endNode, Node* nodes, int node_count) {
         }
     }
 
-    for (int i = 0; i <= startNode->amountOfConnectedEdges; i++) {
+    for (int i = 0; i <= startNode->amountOfOutgoingEdges; i++) {
 
     }
 }

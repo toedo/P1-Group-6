@@ -89,12 +89,4 @@ int LinkNodesAndEdgesByCSVID(Edge* edges, int edgeCount, Node* nodes, int nodeCo
 //callocs or reallocs node.outgoingEdges array, returns 0 on success
 int AppendOutgoingEdgeToNode(Edge* edge, Node* node);
 
-
-//Dijkstras algorithm, finds shortest path between two points
-//Could be replaced with A*
-//The A* algorithm
-Path AStar(Node* startNode, Node* endNode);
-
-//Implementation of the chinese postman problem
-Path ChinesePostman(Node* startNode, Node* nodes, Edge* edges);
 #endif // CSV_IMPORTER_H

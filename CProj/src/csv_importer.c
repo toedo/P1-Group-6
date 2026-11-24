@@ -84,7 +84,7 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
         i++;
     }
 }
-//TODO: Implement solution for when graph is reduced from original data set
+
 int LinkNodesAndEdgesByCSVID(Edge* edges, int edgeCount, Node* nodes, int nodeCount) {
     //loop over edges array
     for (int i = 0; i < edgeCount; i++) {
