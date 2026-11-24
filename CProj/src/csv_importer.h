@@ -8,7 +8,7 @@
 typedef struct node Node;
 typedef struct edge Edge;
 
-//A Single Node
+//A Single Node, must be allocated with calloc
 typedef struct node {
     int nodeID;
     //Position data in lon/lat
@@ -25,7 +25,7 @@ typedef struct node {
     Edge* outgoingEdges;
 } Node;
 
-//A Single Edge
+//A Single Edge, must be allocated with calloc
 typedef struct edge {
     //The actual graph / path data
     int edgeID;
@@ -72,6 +72,7 @@ Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size);
 Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size);
 //returns 0 for successful linking of node and edge pointers
 int LinkNodesAndEdges(Edge* edges, int edgeCount, Node* nodes, int nodeCount);
+int AppendOutgoingEdgeToNode(Edge* edge, Node* node);
 
 
 //Dijkstras algorithm, finds shortest path between two points

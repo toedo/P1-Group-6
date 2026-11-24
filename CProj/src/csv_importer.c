@@ -89,11 +89,28 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
 
 int LinkNodesAndEdges(Edge* edges, int edgeCount, Node* nodes, int nodeCount) {
     //loop over edges array
-    //find end-node pointer by OSM node ID, put node pointer in Node* toNode
-    //
-    //find start-node pointer by OSM node ID, put node pointer in Node* fromNode,
-    //put edge pointer in from-nodes's Edge* outgoingEdges array.
-    return 1;
+    for (int i = 0; i < edgeCount; i++) {
+        //find start-node pointer by CSV ID, put node pointer in Node* fromNode
+        //Avoid out-of-bounds read
+        if (edges[i].fromNodeID >= 0 && edges[i].fromNodeID < nodeCount) {
+            //The fromNodeID is equivalent to the array index of that node in Node* nodes
+            edges[i].fromNode = &nodes[edges[i].fromNodeID];
+            //put edge pointer in from-nodes's Edge* outgoingEdges array.
+            //TODO: Add exiting edge to node.outgoingEdges
+        }
+        //find end-node pointer by CSV ID, put node pointer in Node* toNode
+        if (edges[i].toNodeID >= 0 && edges[i].toNodeID < nodeCount) {
+            edges[i].toNode = &nodes[edges[i].toNodeID];
+        }
+
+    }
+
+    return 0;
+}
+int AppendOutgoingEdgeToNode(Edge* edge, Node* node) {
+    node->amountOfOutgoingEdges++;
+    //TODO: Write the code
+
 }
 
 //TODO: Add function that cleanly frees allocated memory
