@@ -73,7 +73,6 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size);
 
 //Dijkstras algorithm, finds shortest path between two points
 //Could be replaced with A*
-Path Dijkstras(Node* startNode, Node* endNode);
 //The A* algorithm
 Path AStar(Node* startNode, Node* endNode);
 
