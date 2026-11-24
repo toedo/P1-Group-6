@@ -1,5 +1,4 @@
 #include "pathAlgorithms.h"
-
 const int INF = 1000000;
 
 
