@@ -69,7 +69,6 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
         edge.OSMEdgeID = calloc(strlen(edge.roadName), sizeof(char));
         strcpy(edge.OSMEdgeID, edge.roadName);
 
-
         if (i<size) {
             //While not exceeding the size of Edge* edges, overwrite
             edges[i] = edge;
@@ -89,6 +88,11 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
 }
 
 int LinkNodesAndEdges(Edge* edges, int edgeCount, Node* nodes, int nodeCount) {
+    //loop over edges array
+    //find end-node pointer by OSM node ID, put node pointer in Node* toNode
+    //
+    //find start-node pointer by OSM node ID, put node pointer in Node* fromNode,
+    //put edge pointer in from-nodes's Edge* outgoingEdges array.
     return 1;
 }
 

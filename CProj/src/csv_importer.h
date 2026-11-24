@@ -21,8 +21,8 @@ typedef struct node {
     //OSM Data
     int OSMNodeID;
     //Array info
-    int amountOfConnectedEdges;
-    Edge* connectedEdges;
+    int amountOfOutgoingEdges;
+    Edge* outgoingEdges;
 } Node;
 
 //A Single Edge
