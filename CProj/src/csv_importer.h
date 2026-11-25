@@ -81,11 +81,11 @@ typedef struct path {
 } Path;
 
 //Loads nodes from CSV document
-//Should be ran before LoadEdgesFromCSV()
-Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size);
+//Should be ran before LoadEdgesFromCSVToGraph()
+void LoadNodesFromCSVToGraph(FILE* nodesCSV, Graph graph);
 //Loads edges into an array from a CSV document
 //Do not run before LoadNodesFromCSV()
-Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size);
+void LoadEdgesFromCSVToGraph(FILE* edgesCSV, Graph graph);
 //returns 0 for successful linking of node and edge pointers
 int LinkNodesAndEdgesByCSVID(Edge* edges, int edgeCount, Node* nodes, int nodeCount);
 //callocs or reallocs node.outgoingEdges array, returns 0 on success

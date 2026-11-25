@@ -2,40 +2,39 @@
 #define MAX_STR_BUFFER 256
 
 
-Node* LoadNodesFromCSV(FILE* nodesCSV, Node* nodes, int size) {
+void LoadNodesFromCSVToGraph(FILE* nodesCSV, Graph graph) {
     //skip first line
     fscanf(nodesCSV,"[^\n]\n", NULL);
     int i = 0;
-    Node node;
+    Node* node = calloc(1, sizeof(Node));
     //node_id,lon,lat,x_m,y_m,osm_node_id
-    while (6 == fscanf(nodesCSV, "%d,%lf,%lf,%lf,%lf,%d", &node.nodeID, &node.longitude, &node.latitude, &node.UTMx_m, &node.UTMy_m, &node.OSMNodeID)) {
-        if (i<size) {
+    while (0 < fscanf(nodesCSV, "%d,%lf,%lf,%lf,%lf,%d", &node->nodeID, &node->longitude, &node->latitude, &node->UTMx_m, &node->UTMy_m, &node->OSMNodeID)) {
+        if (i<graph.nodeCount) {
             //while not exceeding the size of Node* nodes, overwrite
-            nodes[i] = node;
+            memcpy(&graph.nodes[i],node,sizeof(Node));
         } else {
             //if there are more nodes than the size of Node* nodes, realloc Node* nodes
             //realloc
-            size++;
-            nodes = realloc(nodes, sizeof(Node)*size);
+            graph.nodeCount++;
+            graph.nodes = realloc(graph.nodes, sizeof(Node)*graph.nodeCount);
             //exit cleanly in case of memory allocation failure
-            if (nodes == NULL) {
+            if (graph.nodes == NULL) {
                 printf("Memory allocation failed");
                 exit(EXIT_FAILURE);
             }
             //write node to newly allocated memory
-            nodes[size-1] = node;
+            memcpy(&graph.nodes[graph.nodeCount-1],node,sizeof(Node));
         }
         i++;
     }
-    //return array pointer
-    return nodes;
+
 }
 
-Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
+void LoadEdgesFromCSVToGraph(FILE* edgesCSV, Graph graph) {
     //skip the first line
     fscanf(edgesCSV,"[^\n]\n", NULL);
     //edge struct for holding and formatting data while its being imported
-    Edge edge;
+    Edge* edge = calloc(1, sizeof(Edge));
 
     //Buffers for string values
     char roadNameBuffer[MAX_STR_BUFFER];
@@ -47,38 +46,38 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
     int i = 0;
     //edge_id,u,v,length_m,speed_kmh,travel_time_s,priority,route,name,road_type,oneway,reverse_edge_id,geometry,osm_edge_id
     while (0 < fscanf(edgesCSV,"%d,%d,%d,%lf,%d,%lf,%d,%d,%s,%s,%s,%d,\"%s\",%s",
-        &edge.edgeID, &edge.fromNodeID, &edge.toNodeID,&edge.lengthM,&edge.speedKMH,
-        &edge.travelTimeS,&edge.serviceClassPriority,&edge.routeNumber,&roadNameBuffer,&roadTypeBuffer,
-        &roadTypeBuffer,&isOnewayBuffer,&edge.reverseEdgeID, &LSGBuffer, &OSMEdgeIDBuffer)) {
+        &edge->edgeID, &edge->fromNodeID, &edge->toNodeID,&edge->lengthM,&edge->speedKMH,
+        &edge->travelTimeS,&edge->serviceClassPriority,&edge->routeNumber,&roadNameBuffer,&roadTypeBuffer,
+        &roadTypeBuffer,&isOnewayBuffer,&edge->reverseEdgeID, &LSGBuffer, &OSMEdgeIDBuffer)) {
 
         //Fill out edge data, like pointers to Nodes, and turning boolBuffer into a bool
         //TODO:Might be missing end of string (EOS) character. NumOfElements might also be 1 too low.
-        edge.roadName = calloc(strlen(roadNameBuffer), sizeof(char));
-        strcpy(edge.roadName, roadNameBuffer);
-        edge.roadType = calloc(strlen(roadTypeBuffer), sizeof(char));
-        strcpy(edge.roadType, roadTypeBuffer);
+        edge->roadName = calloc(strlen(roadNameBuffer), sizeof(char));
+        strcpy(edge->roadName, roadNameBuffer);
+        edge->roadType = calloc(strlen(roadTypeBuffer), sizeof(char));
+        strcpy(edge->roadType, roadTypeBuffer);
         if (strcmp(isOnewayBuffer, "True") == 0) {
-            edge.isOneway = true;
+            edge->isOneway = true;
         } else {
-            edge.isOneway = false;
+            edge->isOneway = false;
         }
-        edge.linestringGeometry = calloc(strlen(edge.roadType), sizeof(char));
-        strcpy(edge.linestringGeometry, edge.roadType);
-        edge.OSMEdgeID = calloc(strlen(edge.roadName), sizeof(char));
-        strcpy(edge.OSMEdgeID, edge.roadName);
+        edge->linestringGeometry = calloc(strlen(edge->roadType), sizeof(char));
+        strcpy(edge->linestringGeometry, edge->roadType);
+        edge->OSMEdgeID = calloc(strlen(edge->roadName), sizeof(char));
+        strcpy(edge->OSMEdgeID, OSMEdgeIDBuffer);
 
-        if (i<size) {
+        if (i<graph.edgeCount) {
             //While not exceeding the size of Edge* edges, overwrite
-            edges[i] = edge;
+            memcpy(&graph.edges[i],edge,sizeof(Edge));
         } else {
             //Else, realloc Edge* edges
-            size++;
-            edges = realloc(edges, sizeof(Edge)*size);
-            if (edges == NULL) {
+            graph.edgeCount++;
+            graph.edges = realloc(graph.edges, sizeof(Edge)*graph.edgeCount);
+            if (graph.edges == NULL) {
                 printf("Memory allocation failed");
                 exit(EXIT_FAILURE);
             }
-            edges[size-1] = edge;
+            memcpy(&graph.edges[graph.edgeCount-1],edge,sizeof(Edge));
         }
 
         i++;
