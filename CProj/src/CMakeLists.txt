@@ -1,5 +1,7 @@
 add_library(csv_importer csv_importer.c)
 add_library(pathAlgorithms pathAlgorithms.c)
 
+
+target_include_directories(csv_importer PUBLIC csv_importer.h)
 add_executable(import_aalborg_data import_aalborg_data.c)
 target_link_libraries(import_aalborg_data csv_importer)
