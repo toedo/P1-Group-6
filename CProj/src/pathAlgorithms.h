@@ -17,5 +17,26 @@ Path ChinesePostman(Node* startNode, Node* nodes, Edge* edges);
 Graph TrimGraphByCoords(Graph originalGraph, float lon1, float lat1, float lon2, float lat2);
 
 
+typedef struct
+{
+    int dist;
+    Node* node;
+} heapEntry;;
+
+typedef struct
+{
+    int size;
+    int capacity;
+    heapEntry* entry;
+} minHeap;
+
+int rightChild(int i);
+int leftChild(int i);
+int parent(int i);
+
+void push(minHeap *heap, int dist, Node* node);
+void pop(minHeap heap);
+void initHeap(minHeap *heap, int capacity);
+void heapEntrySwap(heapEntry *a, heapEntry *b);
 
 #endif
