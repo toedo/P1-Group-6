@@ -46,7 +46,7 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size) {
 
     int i = 0;
     //edge_id,u,v,length_m,speed_kmh,travel_time_s,priority,route,name,road_type,oneway,reverse_edge_id,geometry,osm_edge_id
-    while (14 == fscanf(edgesCSV,"%d,%d,%d,%lf,%d,%lf,%d,%d,%s,%s,%s,%d,\"%s\",%s",
+    while (0 < fscanf(edgesCSV,"%d,%d,%d,%lf,%d,%lf,%d,%d,%s,%s,%s,%d,\"%s\",%s",
         &edge.edgeID, &edge.fromNodeID, &edge.toNodeID,&edge.lengthM,&edge.speedKMH,
         &edge.travelTimeS,&edge.serviceClassPriority,&edge.routeNumber,&roadNameBuffer,&roadTypeBuffer,
         &roadTypeBuffer,&isOnewayBuffer,&edge.reverseEdgeID, &LSGBuffer, &OSMEdgeIDBuffer)) {
@@ -98,6 +98,13 @@ int LinkNodesAndEdgesByCSVID(Edge* edges, int edgeCount, Node* nodes, int nodeCo
                 //printf for logging here?
             }
         }
+        //Same as above but from Incoming Edges to a Node
+        if (edges[i].toNodeID >= 0 && edges[i].toNodeID < nodeCount) {
+            edges[i].toNode = &nodes[edges[i].toNodeID];
+            if (AppendIncomingEdgeToNode(&edges[i],&nodes[edges[i].toNodeID])==0) {
+                //Write here for good message
+            }
+        }
         //find end-node pointer by CSV ID, put node pointer in Node* toNode
         if (edges[i].toNodeID >= 0 && edges[i].toNodeID < nodeCount) {
             edges[i].toNode = &nodes[edges[i].toNodeID];
@@ -129,6 +136,28 @@ int AppendOutgoingEdgeToNode(Edge* edge, Node* node) {
             exit(EXIT_FAILURE);
         }
         node->outgoingEdges[node->amountOfOutgoingEdges-1] = *edge;
+    }
+
+    return 0;
+}
+
+int AppendIncomingEdgeToNode(Edge* edge, Node* node) {
+    //should be 0 by default
+    node->amountOfIncomingEdges++;
+    if (node->incomingEdges == NULL) {
+        node->incomingEdges = calloc(node->amountOfIncomingEdges, sizeof(Edge));
+        if (node->incomingEdges == NULL) {
+            printf("Memory allocation failed");
+            exit(EXIT_FAILURE);
+        }
+        node->incomingEdges[node->amountOfIncomingEdges-1] = *edge;
+    } else {
+        node->incomingEdges = realloc(node->incomingEdges,sizeof(Edge)*node->amountOfIncomingEdges);
+        if (node->incomingEdges == NULL) {
+            printf("Memory allocation failed");
+            exit(EXIT_FAILURE);
+        }
+        node->incomingEdges[node->amountOfIncomingEdges-1] = *edge;
     }
     return 0;
 }

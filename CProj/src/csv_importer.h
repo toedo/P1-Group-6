@@ -25,6 +25,8 @@ typedef struct node {
     //Array info
     int amountOfOutgoingEdges;
     Edge* outgoingEdges;
+    int amountOfIncomingEdges;
+    Edge* incomingEdges;
 } Node;
 
 //A Single Edge, must be allocated with calloc
@@ -88,5 +90,7 @@ Edge* LoadEdgesFromCSV(FILE* edgesCSV, Edge* edges, int size);
 int LinkNodesAndEdgesByCSVID(Edge* edges, int edgeCount, Node* nodes, int nodeCount);
 //callocs or reallocs node.outgoingEdges array, returns 0 on success
 int AppendOutgoingEdgeToNode(Edge* edge, Node* node);
+//callocs or reallocs node.incomingEdges array, returns 0 on success
+int AppendIncomingEdgeToNode(Edge* edge, Node* node);
 
 #endif // CSV_IMPORTER_H
