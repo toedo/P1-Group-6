@@ -20,6 +20,8 @@ int main (int argc, char *argv[])
         printf("Error opening csv file\n");
         exit(1);
     }
+    //When making the Graph, it should 0-initialized
+    //Something along the lines of Graph graph = {0};
 
     //allocate memory
     //Load data from files to memory

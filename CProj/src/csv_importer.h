@@ -24,9 +24,9 @@ typedef struct node {
     int OSMNodeID;
     //Array info
     int amountOfOutgoingEdges;
-    Edge* outgoingEdges;
+    Edge** outgoingEdges;
     int amountOfIncomingEdges;
-    Edge* incomingEdges;
+    Edge** incomingEdges;
 } Node;
 
 //A Single Edge, must be allocated with calloc
