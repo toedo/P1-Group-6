@@ -7,12 +7,14 @@ void LoadNodesFromCSVToGraph(FILE* nodesCSV, Graph* graph) {
     //the * after the % suppresses variable assignment,
     //looks for newline character, then skips newline
     fscanf(nodesCSV, "%*[^\n]\n");
-    int i = 0;
+
     Node* node = calloc(1, sizeof(Node));
     if (node == NULL) {
         printf("Memory allocation failed");
         exit(EXIT_FAILURE);
     }
+
+    int i = 0;
     //node_id,lon,lat,x_m,y_m,osm_node_id
     while (6 == fscanf(nodesCSV, "%d,%lf,%lf,%lf,%lf,%d", &node->nodeID, &node->longitude, &node->latitude, &node->UTMx_m, &node->UTMy_m, &node->OSMNodeID)) {
         if (i<graph->nodeCount) {

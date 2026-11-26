@@ -4,31 +4,38 @@
 int main (int argc, char *argv[])
 {    //open the nodes file, open the edges file
     if (argc <3) {
-        printf("Usage: %s <edge csv path> <nodes csv path>\n", argv[0]);
-        exit(1);
+        printf("Usage: %s <nodes csv path> <edges csv path>\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+    const char *nodesCSVPath = argv[1];
+    FILE* nodesCSV = fopen(nodesCSVPath,"r");
+    if (nodesCSV == NULL) {
+        printf("Error opening csv file\n");
+        exit(EXIT_FAILURE);
     }
     //File path should be passed in as an argument when running the program
-    const char *edge_csv_path = argv[1];
-    FILE* edge_csv = fopen(edge_csv_path,"r");
-    if (edge_csv == NULL) {
+    const char *edgeCSVPath = argv[2];
+    FILE* edgeCSV = fopen(edgeCSVPath,"r");
+    if (edgeCSV == NULL) {
         printf("Error opening csv file\n");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
-    const char *nodes_csv_path = argv[2];
-    FILE* nodes_csv = fopen(nodes_csv_path,"r");
-    if (nodes_csv == NULL) {
-        printf("Error opening csv file\n");
-        exit(1);
-    }
+
+    //allocate
     //When making the Graph, it should 0-initialized
     //Something along the lines of Graph graph = {0};
-
-    //allocate memory
+    Graph* aalborgGraph = calloc(1, sizeof(Graph));
+    if (aalborgGraph == NULL) {
+        printf("Error allocating graph\n");
+        exit(EXIT_FAILURE);
+    }
     //Load data from files to memory
+    LoadNodesFromCSVToGraph(nodesCSV, aalborgGraph);
+    LoadEdgesFromCSVToGraph(edgeCSV, aalborgGraph);
 
-    //close files
-    fclose(edge_csv);
-    fclose(nodes_csv);
+    //close files now that the data from them have been loaded into memory
+    fclose(nodesCSV);
+    fclose(edgeCSV);
     //Do something with data in memory
 
 

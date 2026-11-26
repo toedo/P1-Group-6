@@ -93,4 +93,6 @@ int AppendOutgoingEdgeToNode(Edge* edge, Node* node);
 //callocs or reallocs node.incomingEdges array, returns 0 on success
 int AppendIncomingEdgeToNode(Edge* edge, Node* node);
 
+//Creates
+
 #endif // CSV_IMPORTER_H
