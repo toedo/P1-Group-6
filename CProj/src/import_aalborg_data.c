@@ -2,25 +2,24 @@
 #include "csv_importer.h"
 
 int main (int argc, char *argv[])
-{    //open the nodes file, open the edges file
-    if (argc <3) {
-        printf("Usage: %s <nodes csv path> <edges csv path>\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
-    const char *nodesCSVPath = argv[1];
-    FILE* nodesCSV = fopen(nodesCSVPath,"r");
-    if (nodesCSV == NULL) {
-        printf("Error opening csv file\n");
-        exit(EXIT_FAILURE);
-    }
-    //File path should be passed in as an argument when running the program
-    const char *edgeCSVPath = argv[2];
-    FILE* edgeCSV = fopen(edgeCSVPath,"r");
-    if (edgeCSV == NULL) {
-        printf("Error opening csv file\n");
+{
+    FILE* nodesCSV = NULL;
+    FILE* edgesCSV = NULL;
+    //open the nodes file, open the edges file
+    if (argc != 1 && argc != 3) {
+        printf("Usage: %s [<nodes csv path> <edges csv path>]\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
+    if (argc == 3) {
+        OpenCSVsFromPath(&nodesCSV, argv[2], &edgesCSV, argv[2]);
+    }
+    //TODO: Make default path separator take executing OS path separator into account
+    if (argc == 1) {
+
+        OpenCSVsFromPath(&nodesCSV, "dataset\\nodes.csv",&edgesCSV,"dataset\\edges.csv");
+    }
+    printf("Opened the two csv files successfully!\n");
     //allocate
     //When making the Graph, it should 0-initialized
     //Something along the lines of Graph graph = {0};
@@ -29,16 +28,21 @@ int main (int argc, char *argv[])
         printf("Error allocating graph\n");
         exit(EXIT_FAILURE);
     }
+    printf("Successfully allocated graph!\n");
+
+    printf("Begun loading the two csv files into memory!\n");
     //Load data from files to memory
     LoadNodesFromCSVToGraph(nodesCSV, aalborgGraph);
-    LoadEdgesFromCSVToGraph(edgeCSV, aalborgGraph);
+    LoadEdgesFromCSVToGraph(edgesCSV, aalborgGraph);
+    printf("Succesfully loaded the two CSV files into memory!\n");
 
     //close files now that the data from them have been loaded into memory
+    printf("Closing the csv files!");
     fclose(nodesCSV);
-    fclose(edgeCSV);
+    fclose(edgesCSV);
     //Do something with data in memory
-
+    printf("Succesfully closes the two csv files!");
 
     //free all the memory
-    return 1;
+    return 0;
  }

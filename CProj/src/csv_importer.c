@@ -3,10 +3,13 @@
 
 //Should only be ran once at the start of the program.
 void LoadNodesFromCSVToGraph(FILE* nodesCSV, Graph* graph) {
-    //skip first line % means it should match a variable,
-    //the * after the % suppresses variable assignment,
-    //looks for newline character, then skips newline
-    fscanf(nodesCSV, "%*[^\n]\n");
+    //Skip the first line
+    char c = '-';
+    while (c != '\n') {
+        printf("%c", c);
+        c = fgetc(nodesCSV);
+    }
+    printf("\n");
 
     Node* node = calloc(1, sizeof(Node));
     if (node == NULL) {
@@ -42,7 +45,12 @@ void LoadNodesFromCSVToGraph(FILE* nodesCSV, Graph* graph) {
 //Should only be ran once at the start of the program.
 void LoadEdgesFromCSVToGraph(FILE* edgesCSV, Graph* graph) {
     //skip the first line
-    fscanf(edgesCSV, "%*[^\n]\n");
+    char c = '-';
+    while (c != '\n') {
+        printf("%c", c);
+        c = fgetc(edgesCSV);
+    }
+    printf("\n");
     //edge struct for holding and formatting data while its being imported
     Edge* edge = calloc(1, sizeof(Edge));
     if (edge == NULL) {
@@ -221,6 +229,20 @@ int AppendIncomingEdgeToNode(Edge* edge, Node* node) {
         node->incomingEdges[node->amountOfIncomingEdges-1] = edge;
     }
     return 0;
+}
+
+void OpenCSVsFromPath(FILE** nodesCSV, const char *nodesCSVPath, FILE** edgeCSV, const char *edgeCSVPath) {
+    *nodesCSV = fopen(nodesCSVPath,"r");
+    if (nodesCSV == NULL) {
+        printf("Error opening csv file\n");
+        exit(EXIT_FAILURE);
+    }
+    //File path should be passed in as an argument when running the program
+    *edgeCSV = fopen(edgeCSVPath,"r");
+    if (edgeCSV == NULL) {
+        printf("Error opening csv file\n");
+        exit(EXIT_FAILURE);
+    }
 }
 
 //TODO: Add function that cleanly frees all allocated memory

@@ -92,7 +92,7 @@ int LinkNodesAndEdgesByCSVID(Graph* graph);
 int AppendOutgoingEdgeToNode(Edge* edge, Node* node);
 //callocs or reallocs node.incomingEdges array, returns 0 on success
 int AppendIncomingEdgeToNode(Edge* edge, Node* node);
-
-//Creates
+//Opens two CSV files from given string paths
+void OpenCSVsFromPath(FILE** nodesCSV, const char *nodesCSVPath, FILE** edgeCSV, const char *edgeCSVPath);
 
 #endif // CSV_IMPORTER_H
