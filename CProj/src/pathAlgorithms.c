@@ -1,5 +1,5 @@
 #include "pathAlgorithms.h"
-const int INF = 1000000;
+#include <math.h>
 
 
 int parent(int i) { return (i - 1) / 2; }
@@ -27,7 +27,12 @@ void pop(minHeap heap) //Pops entry; if entry is unmarked vertex, mark vertex an
 }
 
 
-
+/*If this tries to use array indicies
+ *without using the graph struct
+ *(which stores the size of the nodes array and the size of the edges array)
+ *this is going to cause problems
+ *(most likely out-of-bounds memory read errors)
+*/
 Path Dijkstras(Node *startNode, Node* endNode, Node* nodes, int node_count)
 {
     minHeap heap;
@@ -46,7 +51,7 @@ Path Dijkstras(Node *startNode, Node* endNode, Node* nodes, int node_count)
 
     for (int i = 0; i < node_count; i++) {
         marked[i] = false;
-        dist[i] = INF;
+        dist[i] = INFINITY;
     }
     dist[startNode->nodeID] = 0;
 
