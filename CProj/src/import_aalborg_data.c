@@ -34,14 +34,16 @@ int main (int argc, char *argv[])
     //Load data from files to memory
     LoadNodesFromCSVToGraph(nodesCSV, aalborgGraph);
     LoadEdgesFromCSVToGraph(edgesCSV, aalborgGraph);
-    printf("Succesfully loaded the two CSV files into memory!\n");
+    printf("Successfully loaded the two CSV files into memory!\n");
+
 
     //close files now that the data from them have been loaded into memory
     printf("Closing the csv files!");
     fclose(nodesCSV);
     fclose(edgesCSV);
+    printf("Successfully closed the two csv files!");
     //Do something with data in memory
-    printf("Succesfully closes the two csv files!");
+
 
     //free all the memory
     return 0;

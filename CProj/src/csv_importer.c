@@ -1,7 +1,13 @@
 #include "csv_importer.h"
 #define MAX_STR_BUFFER 256
 
-//Should only be ran once at the start of the program.
+//Should only be run once at the start of the program.
+/**
+ * Should only be run once at the start of the program, before LoadEdgesFromCSVToGraph.
+ * Loads in the edges into the graph's array from the csv file.
+ * @param nodesCSV .csv file containing nodes
+ * @param graph the graph where the edges are saved
+ */
 void LoadNodesFromCSVToGraph(FILE* nodesCSV, Graph* graph) {
     //Skip the first line
     char c = '-';
@@ -42,7 +48,14 @@ void LoadNodesFromCSVToGraph(FILE* nodesCSV, Graph* graph) {
     free(node);
 }
 
-//Should only be ran once at the start of the program.
+
+/**
+ * Do NOT run before LoadNodesFromCSV().
+ * Should only be run once at the start of the program.
+ * Loads in the edges into the graph's array from the csv file.
+ * @param edgesCSV .csv file containing edges
+ * @param graph the graph where the edges are saved
+ */
 void LoadEdgesFromCSVToGraph(FILE* edgesCSV, Graph* graph) {
     //skip the first line
     char c = '-';
@@ -124,8 +137,7 @@ void LoadEdgesFromCSVToGraph(FILE* edgesCSV, Graph* graph) {
         } else {
             //Else, realloc Edge* edges
             graph->edgeCount++;
-            Edge* temp = graph->edges;
-            temp = realloc(graph->edges, sizeof(Edge)*graph->edgeCount);
+            Edge* temp = realloc(graph->edges, sizeof(Edge)*graph->edgeCount);
             if (temp == NULL) {
                 printf("Memory allocation failed");
                 exit(EXIT_FAILURE);
@@ -138,99 +150,115 @@ void LoadEdgesFromCSVToGraph(FILE* edgesCSV, Graph* graph) {
     }
     free(edge);
 }
-//Assumes edgeID is equivalent to index, assumes nodeID is equivalent to index
-//Because that's the way it is in the data we are working from
-//TODO: Ideally both the toNodeID and fromNodeID should be checked BEFORE appending
+//TODO: Some king of system that murders a fucked up edge? Or maybe just brick the whole brogram if theres an error
+/**
+ * Assumes edgeID is equivalent to array index, assumes nodeID is equivalent to array index.
+ * Because that's the way it is in the data we are working from.
+ * Creates pointers between corresponding associated notes and edges
+ * @param graph
+ * @return returns 0 on success, otherwise an error has occurred
+ */
 int LinkNodesAndEdgesByCSVID(Graph* graph) {
+    int retVal = 0;
     //loop over edges array
     for (int i = 0; i < graph->edgeCount; i++) {
-        //find start-node pointer by CSV ID, put node pointer in Node* fromNode
-        //Avoid out-of-bounds read
-        if (graph->edges[i].fromNodeID >= 0 && graph->edges[i].fromNodeID < graph->nodeCount) {
-            //The fromNodeID is equivalent to the array index of that node in Node* nodes
-            graph->edges[i].fromNode = &graph->nodes[graph->edges[i].fromNodeID];
-            //put edge pointer in from-nodes's Edge* outgoingEdges array.
-            if (AppendOutgoingEdgeToNode(&graph->edges[i],&graph->nodes[graph->edges[i].fromNodeID])==0) {
-                //printf for logging here?
-            } else {
-                return-1;
-            }
-        } else {
-            return -1;
+        Edge* edge = &graph->edges[i];
+        //Checks that the fromNodeID and the toNodeID are both valid indexes
+        if (edge->fromNodeID < 0 || edge->fromNodeID >= graph->nodeCount
+            || edge->toNodeID < 0 || edge->toNodeID >= graph->nodeCount) {
+            retVal = -1;
+            printf("Error: fromNodeID or toNodeID missing! Skipped adding edge.\n");
+            continue;
         }
-
-
-        //Same as above but from Incoming Edges to a Node
-        if (graph->edges[i].toNodeID >= 0 && graph->edges[i].toNodeID < graph->nodeCount) {
-            graph->edges[i].toNode = &graph->nodes[graph->edges[i].toNodeID];
-            if (AppendIncomingEdgeToNode(&graph->edges[i],&graph->nodes[graph->edges[i].toNodeID])==0) {
-                //Write here for good message
-            } else {
-                return -1;
-            }
-        } else {
-            return -1;
+        //Since both of these indexes exist, both of the corresponding nodes have pointers added at once
+        //This prevents any kind of "hanging chad" where an edge only has one of the proper pointers
+        //For example if a graph was trimmed down and happened to "cut" between two connected nodes
+        edge->fromNode = &graph->nodes[edge->fromNodeID];
+        edge->toNode = &graph->nodes[edge->toNodeID];
+        //Now the fromNode should have the current edge added to its outgoingEdges
+        if (AppendOutgoingEdgeToNode(edge, edge->fromNode) != 0) {
+            printf("Error: Failed to connect outgoing edge to start node.\n");
+            retVal = -1;
+            continue;
         }
-
+        //And the toNode should have the current edge added to its incomingEdges
+        if (AppendIncomingEdgeToNode(edge, edge->toNode) != 0) {
+            //If the previous append operation succeeded, but the current one failed
+            //Undo the previous append operation and skip the rest of this edge
+            printf("Error: Failed to connect incoming edge to destination node.\n");
+            edge->fromNode->amountOfOutgoingEdges--;
+            retVal = -1;
+            continue;
+        }
 
         //reverse edge pointers
-        if (graph->edges[i].isOneway == false
-            && graph->edges[i].reverseEdgeID >= 0
-            && graph->edges[i].reverseEdgeID < graph->edgeCount) {
-            graph->edges[i].reverseEdge = &graph->edges[graph->edges[i].reverseEdgeID];
+        if (!edge->isOneway) {
+            if (edge->reverseEdgeID < 0 || edge->reverseEdgeID >= graph->edgeCount) {
+                retVal = -1;
+                continue;
+            }
+            edge->reverseEdge = &graph->edges[edge->reverseEdgeID];
         }
     }
 
-    return 0;
+    return retVal;
 }
-//TODO: Maybe add function that links using OSM IDs
 
-//TODO: Maybe return -1 on failure instead of just exiting the program
+/**
+ * Helper function that creates pointers between an edge that starts at a node
+ * Returns 0 on success, -1 for an error
+ * @param edge outgoing edge
+ * @param node start node
+ * @return returns 0 on success
+ */
 int AppendOutgoingEdgeToNode(Edge* edge, Node* node) {
-    //should be 0 by default
-    node->amountOfOutgoingEdges++;
-    if (node->outgoingEdges == NULL) {
-        node->outgoingEdges = calloc(node->amountOfOutgoingEdges, sizeof(*node->outgoingEdges));
-        if (node->outgoingEdges == NULL) {
-            printf("Memory allocation failed");
-            exit(EXIT_FAILURE);
-        }
-        node->outgoingEdges[node->amountOfOutgoingEdges-1] = edge;
-    } else {
-        Edge** temp = realloc(node->outgoingEdges,sizeof(*node->outgoingEdges)*node->amountOfOutgoingEdges);
-        if (temp == NULL) {
-            printf("Memory allocation failed");
-            exit(EXIT_FAILURE);
-        }
-        node->outgoingEdges = temp;
-        node->outgoingEdges[node->amountOfOutgoingEdges-1] = edge;
+    //Temporary values are used to prevent overwriting existing memory in case of a realloc failure.
+    int newCount = node->amountOfOutgoingEdges + 1;
+    Edge** temp = realloc(node->outgoingEdges,sizeof(Edge*)*newCount);
+    if (temp == NULL) {
+        printf("Memory allocation failed");
+        return -1;
     }
+
+    //Adds the outgoing edge to the node
+    temp[newCount-1] = edge;
+    node->outgoingEdges = temp;
+    node->amountOfOutgoingEdges = newCount;
 
     return 0;
 }
-//TODO: Maybe return -1 on failure instead of just exiting the program
+
+/**
+ * Helper function that creates pointers between an edge that ends at a node
+ * Returns 0 on success, -1 for an error
+ * @param edge incoming edge
+ * @param node end node
+ * @return returns 0 on success
+ */
 int AppendIncomingEdgeToNode(Edge* edge, Node* node) {
-    //should be 0 by default
-    node->amountOfIncomingEdges++;
-    if (node->incomingEdges == NULL) {
-        node->incomingEdges = calloc(node->amountOfIncomingEdges, sizeof(*node->outgoingEdges));
-        if (node->incomingEdges == NULL) {
-            printf("Memory allocation failed");
-            exit(EXIT_FAILURE);
-        }
-        node->incomingEdges[node->amountOfIncomingEdges-1] = edge;
-    } else {
-        Edge** temp = realloc(node->incomingEdges,sizeof(*node->outgoingEdges)*node->amountOfIncomingEdges);
-        if (temp == NULL) {
-            printf("Memory allocation failed");
-            exit(EXIT_FAILURE);
-        }
-        node->incomingEdges = temp;
-        node->incomingEdges[node->amountOfIncomingEdges-1] = edge;
+    //Temporary values are used to prevent overwriting existing memory in case of a realloc failure.
+    int newCount = node->amountOfIncomingEdges + 1;
+    Edge** temp = realloc(node->incomingEdges,sizeof(*node->incomingEdges)*newCount);
+    if (temp == NULL) {
+        printf("Memory allocation failed");
+        return -1;
     }
+
+    //Adds the incoming edge to the node
+    temp[newCount-1] = edge;
+    node->incomingEdges = temp;
+    node->amountOfIncomingEdges = newCount;
+
     return 0;
 }
 
+/**
+ * Used to open to CSV files for nodes and edges respectively
+ * @param nodesCSV Used as a return variable for the nodes
+ * @param nodesCSVPath Absolute or local path from working directory to node csv file
+ * @param edgeCSV Used as a return variable for the edges
+ * @param edgeCSVPath Absolute or local path from working directory to edges csv file
+ */
 void OpenCSVsFromPath(FILE** nodesCSV, const char *nodesCSVPath, FILE** edgeCSV, const char *edgeCSVPath) {
     *nodesCSV = fopen(nodesCSVPath,"r");
     if (nodesCSV == NULL) {
@@ -245,4 +273,19 @@ void OpenCSVsFromPath(FILE** nodesCSV, const char *nodesCSVPath, FILE** edgeCSV,
     }
 }
 
-//TODO: Add function that cleanly frees all allocated memory
+
+//TODO: Finish function that cleanly frees all allocated memory
+
+/**
+ *Frees a Graph, includes nodes array and edges array
+ *Consequently, arrays of nodes and edges MUST be associated with only one graph
+ *Otherwise other graphs could try to access freed memory
+ * @param graph Pointer to the graph struct to be freed
+ */
+int FreeGraph(Graph* graph) {
+    if (graph == NULL) {
+        printf("Failed to free graph, as graph pointer was NULL\n");
+        return -1;
+    }
+    return -1;
+}

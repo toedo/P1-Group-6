@@ -81,18 +81,12 @@ typedef struct path {
 } Path;
 
 //Loads nodes from CSV document
-//Should be ran before LoadEdgesFromCSVToGraph()
+//Should be run before LoadEdgesFromCSVToGraph()
 void LoadNodesFromCSVToGraph(FILE* nodesCSV, Graph* graph);
-//Loads edges into an array from a CSV document
-//Do not run before LoadNodesFromCSV()
 void LoadEdgesFromCSVToGraph(FILE* edgesCSV, Graph* graph);
-//returns 0 for successful linking of node and edge pointers
 int LinkNodesAndEdgesByCSVID(Graph* graph);
-//callocs or reallocs node.outgoingEdges array, returns 0 on success
 int AppendOutgoingEdgeToNode(Edge* edge, Node* node);
-//callocs or reallocs node.incomingEdges array, returns 0 on success
 int AppendIncomingEdgeToNode(Edge* edge, Node* node);
-//Opens two CSV files from given string paths
 void OpenCSVsFromPath(FILE** nodesCSV, const char *nodesCSVPath, FILE** edgeCSV, const char *edgeCSVPath);
 
 #endif // CSV_IMPORTER_H
