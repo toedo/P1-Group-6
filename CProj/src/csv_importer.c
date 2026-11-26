@@ -83,7 +83,8 @@ void LoadEdgesFromCSVToGraph(FILE* edgesCSV, Graph* graph) {
         i++;
     }
 }
-
+//Assumes edgeID is equivalent to index, assumes nodeID is equivalent to index
+//Because that's the way it is in the data we are working from
 int LinkNodesAndEdgesByCSVID(Graph* graph) {
     //loop over edges array
     for (int i = 0; i < graph->edgeCount; i++) {
@@ -95,7 +96,7 @@ int LinkNodesAndEdgesByCSVID(Graph* graph) {
             //put edge pointer in from-nodes's Edge* outgoingEdges array.
             if (AppendOutgoingEdgeToNode(&graph->edges[i],&graph->nodes[graph->edges[i].fromNodeID])==0) {
                 //printf for logging here?
-            }
+            } 
         }
         //Same as above but from Incoming Edges to a Node
         if (graph->edges[i].toNodeID >= 0 && graph->edges[i].toNodeID < graph->nodeCount) {
@@ -109,7 +110,9 @@ int LinkNodesAndEdgesByCSVID(Graph* graph) {
             graph->edges[i].toNode = &graph->nodes[graph->edges[i].toNodeID];
         }
         //reverse edge pointers
-        if (graph->edges[i].isOneway == false) {
+        if (graph->edges[i].isOneway == false
+            && graph->edges[i].reverseEdgeID >= 0
+            && graph->edges[i].reverseEdgeID < graph->edgeCount) {
             graph->edges[i].reverseEdge = &graph->edges[graph->edges[i].reverseEdgeID];
         }
     }
