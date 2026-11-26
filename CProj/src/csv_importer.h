@@ -40,7 +40,7 @@ typedef struct edge {
 
     //This is mostly used to calculate the "cost" of traversing an edge
     double lengthM;
-    double speedKMH;
+    int speedKMH;
     double travelTimeS;
     //Road data, mostly for display
     int serviceClassPriority;
@@ -82,12 +82,12 @@ typedef struct path {
 
 //Loads nodes from CSV document
 //Should be ran before LoadEdgesFromCSVToGraph()
-void LoadNodesFromCSVToGraph(FILE* nodesCSV, Graph graph);
+void LoadNodesFromCSVToGraph(FILE* nodesCSV, Graph* graph);
 //Loads edges into an array from a CSV document
 //Do not run before LoadNodesFromCSV()
-void LoadEdgesFromCSVToGraph(FILE* edgesCSV, Graph graph);
+void LoadEdgesFromCSVToGraph(FILE* edgesCSV, Graph* graph);
 //returns 0 for successful linking of node and edge pointers
-int LinkNodesAndEdgesByCSVID(Edge* edges, int edgeCount, Node* nodes, int nodeCount);
+int LinkNodesAndEdgesByCSVID(Graph* graph);
 //callocs or reallocs node.outgoingEdges array, returns 0 on success
 int AppendOutgoingEdgeToNode(Edge* edge, Node* node);
 //callocs or reallocs node.incomingEdges array, returns 0 on success
