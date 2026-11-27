@@ -109,5 +109,7 @@ int AppendOutgoingEdgeToNode(Edge* edge, Node* node);
 int AppendIncomingEdgeToNode(Edge* edge, Node* node);
 void OpenCSVsFromPath(FILE** nodesCSV, const char *nodesCSVPath, FILE** edgeCSV, const char *edgeCSVPath);
 int FreeGraph(Graph* graph);
-
+//Creates new subsets of Nodes* and Edges* that are inside a square
+//it also "links" the new arrays
+Graph* TrimGraphByLonLat(Graph* originalGraph, double lon1, double lon2, double lat1, double lat2);
 #endif // CSV_IMPORTER_H
