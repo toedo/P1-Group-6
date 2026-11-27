@@ -1,7 +1,7 @@
 #include "csv_importer.h"
 #define MAX_STR_BUFFER 256
 
-//Should only be run once at the start of the program.
+
 /**
  * Should only be run once at the start of the program.
  * Loads in the edges into the graph's array from the csv file.
@@ -303,9 +303,18 @@ int FreeGraph(Graph* graph) {
         free(node->incomingEdges);
     }
 
-    //freeing the arrays with the edges and nodes themselves
+    //Freeing each of the associated paths
+    for (int i = 0; i < graph->pathCount; i++) {
+        Path* path = &graph->paths[i];
+        free(path->edges);
+        free(path->nodes);
+    }
+
+
+    //freeing the arrays with the edges etc. themselves
     free(graph->edges);
     free(graph->nodes);
+    free(graph->paths);
 
     //lastry freeing the graph itself
     free(graph);

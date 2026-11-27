@@ -53,6 +53,5 @@ int main (int argc, char *argv[])
     int freeResult = FreeGraph(aalborgGraph);
     printf("FreeGraph(aalborgGraph) gave the following result: %d\n", freeResult);
 
-
     return 0;
  }

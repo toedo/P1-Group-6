@@ -16,13 +16,13 @@ typedef struct node {
     //Position data in lon/lat
     double longitude;
     double latitude;
-    //UTM Zone 32 - meter data. Is good for calculating the distance in meters between two arbitrary nodes
+    //UTM Zone 32 - meter data. Is good for calculating the distance in meters between two nodes
     //Can be used for heuristics or distance estimation.
     double UTMx_m;
     double UTMy_m;
-    //OSM Data
+
     int OSMNodeID;
-    //Array info
+    //Array info used for adjacency arrays
     int amountOfOutgoingEdges;
     Edge** outgoingEdges;
     int amountOfIncomingEdges;
@@ -31,8 +31,9 @@ typedef struct node {
 
 //A Single Edge, must be allocated with calloc
 typedef struct edge {
-    //The actual graph / path data
     int edgeID;
+    //The actual graph / path data
+    //Is mostly used to create adjacency arrays and for fast lookup
     int fromNodeID;
     Node* fromNode;
     int toNodeID;
@@ -42,21 +43,25 @@ typedef struct edge {
     double lengthM;
     int speedKMH;
     double travelTimeS;
-    //Road data, mostly for display
+    //Aalborg municipality road service class priority (1-4)
     int serviceClassPriority;
+    //TODO: Double check what route number in the csv actually is
+    //Bus route number, if there is an associated bus route?
     int routeNumber;
-    //pointer to string
+
+    //pointer to road name string
     char* roadName;
-    //pointer to string
+    //pointer to road type string
     char* roadType;
+
     //No reverse edge means it is oneway, this is also relevant for path finding
     bool isOneway;
     int reverseEdgeID;
     Edge* reverseEdge;
 
-    //These two *probably* aren't necessary
+    //Pointer to linestring geometry string
     char* linestringGeometry;
-    //This is on the form "(int)_(int)" where the two ints are two OSM node ids.
+    //This is a string of the form "(int)_(int)" where the two ints are two OSM node ids.
     char* OSMEdgeID;
 
 } Edge;
@@ -71,17 +76,28 @@ typedef struct graph {
     //References to nodes and edges arrays
     int edgeCount;
     Edge* edges;
+
     int nodeCount;
     Node* nodes;
+
+    int pathCount;
+    Path* paths;
 }Graph;
 
 //Ordered arrays for the taken path
+/**
+ * Arrays of nodes and edges traversed (in order) inside an associated graph
+ */
 typedef struct path {
+    //If the associatedGraph is a NULL pointer that means all the edges and nodes were deleted as well
+    //This means that the path is invalid as it would be referencing now freed memory
+    Graph* associatedGraph;
+
     int edgesTraversed;
-    Edge* edges;
+    Edge** edges;
 
     int nodesTraversed;
-    Node* nodes;
+    Node** nodes;
 } Path;
 
 //Loads nodes from CSV document
