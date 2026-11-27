@@ -62,9 +62,13 @@ typedef struct edge {
 } Edge;
 
 //TODO: Finish graph struct
+
+/**
+ * The graph struct containing references to the nodes and edges
+ * Should be dynamically allocated using calloc, due to the way FreeGraph() works
+ */
 typedef struct graph {
-    Node* head;
-    //References to nodes and edges arrays?
+    //References to nodes and edges arrays
     int edgeCount;
     Edge* edges;
     int nodeCount;
@@ -88,5 +92,6 @@ int LinkNodesAndEdgesByCSVID(Graph* graph);
 int AppendOutgoingEdgeToNode(Edge* edge, Node* node);
 int AppendIncomingEdgeToNode(Edge* edge, Node* node);
 void OpenCSVsFromPath(FILE** nodesCSV, const char *nodesCSVPath, FILE** edgeCSV, const char *edgeCSVPath);
+int FreeGraph(Graph* graph);
 
 #endif // CSV_IMPORTER_H

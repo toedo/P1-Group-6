@@ -276,15 +276,39 @@ void OpenCSVsFromPath(FILE** nodesCSV, const char *nodesCSVPath, FILE** edgeCSV,
 //TODO: Finish function that cleanly frees all allocated memory
 
 /**
- *Frees a Graph, includes nodes array and edges array
- *Consequently, arrays of nodes and edges MUST be associated with only one graph
- *Otherwise other graphs could try to access freed memory
+ * Frees a Graph, includes nodes array and edges array
+ * Consequently, arrays of nodes and edges MUST be associated with only one graph
+ * Otherwise other graphs could try to access freed memory
  * @param graph Pointer to the graph struct to be freed
+ * @return 0 on success, otherwise an error occurred
  */
 int FreeGraph(Graph* graph) {
     if (graph == NULL) {
         printf("Failed to free graph, as graph pointer was NULL\n");
         return -1;
     }
-    return -1;
+    //freeing edges content
+    for (int i = 0; i < graph->edgeCount; i++) {
+        Edge* edge = &graph->edges[i];
+        //First freeing the strings pointed to by each edge
+        free(edge->roadName);
+        free(edge->roadType);
+        free(edge->linestringGeometry);
+        free(edge->OSMEdgeID);
+    }
+    //Freeing each of the node adjacency arrays
+    for (int i = 0; i < graph->nodeCount; i++) {
+        Node* node = &graph->nodes[i];
+        free(node->outgoingEdges);
+        free(node->incomingEdges);
+    }
+
+    //freeing the arrays with the edges and nodes themselves
+    free(graph->edges);
+    free(graph->nodes);
+
+    //lastry freeing the graph itself
+    free(graph);
+
+    return 0;
 }
