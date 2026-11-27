@@ -38,12 +38,15 @@ int main (int argc, char *argv[])
 
 
     //close files now that the data from them have been loaded into memory
-    printf("Closing the csv files!");
+    printf("Closing the csv files!\n");
     fclose(nodesCSV);
     fclose(edgesCSV);
-    printf("Successfully closed the two csv files!");
+    printf("Successfully closed the two csv files\n");
     //Do something with data in memory
-
+    //It MIGHT just be time to try and link nodes and edges
+    printf("Attempting to connect nodes and edges together using CSVID!\n");
+    int linkResult = LinkNodesAndEdgesByCSVID(aalborgGraph);
+    printf("LinkNodesAndEdgesByCSVID(aalborgGraph) gave the following result: %d\n",linkResult);
 
     //free all the memory
     return 0;

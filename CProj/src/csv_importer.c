@@ -3,7 +3,7 @@
 
 //Should only be run once at the start of the program.
 /**
- * Should only be run once at the start of the program, before LoadEdgesFromCSVToGraph.
+ * Should only be run once at the start of the program.
  * Loads in the edges into the graph's array from the csv file.
  * @param nodesCSV .csv file containing nodes
  * @param graph the graph where the edges are saved
@@ -50,7 +50,6 @@ void LoadNodesFromCSVToGraph(FILE* nodesCSV, Graph* graph) {
 
 
 /**
- * Do NOT run before LoadNodesFromCSV().
  * Should only be run once at the start of the program.
  * Loads in the edges into the graph's array from the csv file.
  * @param edgesCSV .csv file containing edges
@@ -99,7 +98,7 @@ void LoadEdgesFromCSVToGraph(FILE* edgesCSV, Graph* graph) {
     LSGBuffer,
     OSMEdgeIDBuffer)) {
 
-        //Fill out edge data, like pointers to Nodes, and turning boolBuffer into a bool
+        //Fill out edge data
         //NumOfElements is strlen + 1 to account for string terminator.
         edge->roadName = calloc(strlen(roadNameBuffer)+1, sizeof(char));
         if (edge->roadName == NULL) {
