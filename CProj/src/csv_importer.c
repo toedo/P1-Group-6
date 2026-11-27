@@ -321,3 +321,8 @@ int FreeGraph(Graph* graph) {
 
     return 0;
 }
+
+Graph* TrimGraphByLonLat(Graph* originalGraph, float lon1, float lon2, float lat1, float lat2) {
+
+    return NULL;
+}

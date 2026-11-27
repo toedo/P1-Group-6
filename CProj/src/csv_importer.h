@@ -109,5 +109,6 @@ int AppendOutgoingEdgeToNode(Edge* edge, Node* node);
 int AppendIncomingEdgeToNode(Edge* edge, Node* node);
 void OpenCSVsFromPath(FILE** nodesCSV, const char *nodesCSVPath, FILE** edgeCSV, const char *edgeCSVPath);
 int FreeGraph(Graph* graph);
+Graph* TrimGraphByLonLat(Graph* originalGraph, float lon1, float lon2, float lat1, float lat2);
 
 #endif // CSV_IMPORTER_H
