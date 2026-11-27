@@ -5,14 +5,15 @@
 //The pathfinding algorithms Djikstras and A* are (to a degree) interchangable (they use the same start and end nodes)
 
 //Dijkstras algorithm, finds shortest path between two points
-Path Dijkstras(Node* startNode, Node* endNode, Node* nodes, int node_count);
+Path *Dijkstras(Node *startNode, Node *endNode, Graph* graph);
 //The A* algorithm
-Path AStar(Node* startNode, Node* endNode, Node* nodes, int node_count);
+Path *AStar(Node* startNode, Node* endNode, Graph* graph);
 
 //Implementation of the chinese postman problem
 Path ChinesePostman(Node* startNode, Node* nodes, Edge* edges);
 
-
+//Find path allows us to interface between several different node to node pathfinding algorithms more easily
+Path* FindPath(Node* startNode, Node* endNode, Graph* graph, Path*(*ptr)(Node* startNode, Node* endNode, Node* nodeArray, int nodeCount));
 
 //Structure of heaps (double because travel times have decimal values)
 typedef struct

@@ -73,15 +73,15 @@ typedef struct edge {
  * Should be dynamically allocated using calloc, due to the way FreeGraph() works
  */
 typedef struct graph {
-    //References to nodes and edges arrays
+    //References to nodes, edges and path arrays
     int edgeCount;
-    Edge* edges;
+    Edge* edges; //Array pointer
 
     int nodeCount;
-    Node* nodes;
+    Node* nodes; //Array pointer
 
     int pathCount;
-    Path* paths;
+    Path* paths; //Array pointer
 }Graph;
 
 //Ordered arrays for the taken path

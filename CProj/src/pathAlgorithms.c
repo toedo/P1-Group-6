@@ -37,13 +37,16 @@ heapEntry pop(minHeap *heap) //Pops entry; if entry is unmarked vertex, mark ver
 
 
 //A helper function for Dijkstra and AStar pathfinding
-Path findPath(Node* startNode, Node* endNode, Node* nodes, int node_count, bool usingAStar)
+Path* FindPath(Node* startNode, Node* endNode, Graph* graph, Path*(*ptr)(Node* startNode, Node* endNode, Node* nodeArray, int nodeCount))
 {
+    Node* nodes = graph->nodes;
+    int nodeCount = graph->nodeCount;
+
     //Initializes path
-    Path path = {0};
+    Path* path = calloc(1, sizeof(Path));
 
     //Check if input is valid
-    if (startNode == 0 || endNode == NULL || nodes == 0 || node_count <= 0)
+    if (startNode == 0 || endNode == NULL || nodes == 0 || nodeCount <= 0)
     {
         return path;
     }
@@ -57,23 +60,25 @@ Path findPath(Node* startNode, Node* endNode, Node* nodes, int node_count, bool 
  *this is going to cause problems
  *(most likely out-of-bounds memory read errors)
 */
-Path Dijkstras(Node *startNode, Node* endNode, Node* nodes, int node_count)
+Path *Dijkstras(Node *startNode, Node *endNode, Graph* graph)
 {
+    int nodeCount = graph->nodeCount;
+
     minHeap heap;
-    int heapCapacity = node_count;
+    int heapCapacity = nodeCount;
     initHeap(&heap, heapCapacity);
 
     //Array for each vertex (node)
     //Stores the shortest route between start vertex d[s] and d[v]
     //initial value is infinity
-    int *dist = malloc(node_count * sizeof(int));
+    int *dist = malloc(nodeCount * sizeof(int));
     //boolean array u[], checks to see if each vertex is marked
     //initially all are unmarked (false)
-    bool *marked = malloc(node_count * sizeof(bool));
-    int *pred = malloc(node_count * sizeof(int)); //Array of predecessor vertices
+    bool *marked = malloc(nodeCount * sizeof(bool));
+    int *pred = malloc(nodeCount * sizeof(int)); //Array of predecessor vertices
 
 
-    for (int i = 0; i < node_count; i++) {
+    for (int i = 0; i < nodeCount; i++) {
         marked[i] = false;
         dist[i] = INFINITY;
     }
@@ -95,7 +100,7 @@ double heuristic (Node* currentNode, Node* endNode)
     return 0;
 }
 
-Path AStar(Node* startNode, Node* endNode, Node* nodes, int node_count)
+Path *AStar(Node* startNode, Node* endNode, Graph* graph)
 {
 
 }
