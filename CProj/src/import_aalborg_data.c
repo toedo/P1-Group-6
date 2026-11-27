@@ -49,5 +49,10 @@ int main (int argc, char *argv[])
     printf("LinkNodesAndEdgesByCSVID(aalborgGraph) gave the following result: %d\n",linkResult);
 
     //free all the memory
+    printf("Attempting to free aalborgGraph\n");
+    int freeResult = FreeGraph(aalborgGraph);
+    printf("FreeGraph(aalborgGraph) gave the following result: %d\n", freeResult);
+
+
     return 0;
  }
